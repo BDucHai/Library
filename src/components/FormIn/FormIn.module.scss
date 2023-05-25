@@ -1,0 +1,143 @@
+.container {
+     display: flex;
+     justify-content: center;
+     align-items: center;
+     width: 100%;
+     height: 100vh;
+     background: url('../../images/bgLogin.jpg');
+     background-size: cover;
+     background-position: center;
+     background-repeat: no-repeat;
+}
+
+.login {
+     position: relative;
+     width: 400px;
+     height: 520px;
+     border-radius: 14px;
+     overflow: hidden;
+}
+.loginSign{
+     position: relative;
+     width: 400px;
+     height: 620px;
+     border-radius: 14px;
+     overflow: hidden;
+}
+.login::before {
+     content: "";
+     position: absolute;
+     top: -50%;
+     left: -50%;
+     width: 400px;
+     height: 520px;
+     background: linear-gradient(0deg, transparent, transparent, #45f3ff, #45f3ff, #45f3ff);
+     z-index: 1;
+     transform-origin: bottom right;
+     animation: animate 6s linear infinite;
+}
+
+.loginSign::before {
+     content: "";
+     position: absolute;
+     top: -50%;
+     left: -50%;
+     width: 400px;
+     height: 620px;
+     background: linear-gradient(0deg, transparent, transparent, #45f3ff, #45f3ff, #45f3ff);
+     z-index: 1;
+     transform-origin: bottom right;
+     animation: animate 10s linear infinite;
+}
+
+.login::after {
+     content: "";
+     position: absolute;
+     top: -50%;
+     left: -50%;
+     width: 400px;
+     height: 520px;
+     background: linear-gradient(0deg, transparent, transparent, #45f3ff, #45f3ff, #45f3ff);
+     z-index: 1;
+     transform-origin: bottom right;
+     animation: animate 6s linear infinite;
+     animation-delay: -3s;
+}
+.loginSign::after {
+     content: "";
+     position: absolute;
+     top: -50%;
+     left: -50%;
+     width: 400px;
+     height: 620px;
+     background: linear-gradient(0deg, transparent, transparent, #45f3ff, #45f3ff, #45f3ff);
+     z-index: 1;
+     transform-origin: bottom right;
+     animation: animate 10s linear infinite;
+     animation-delay: -5s;
+}
+
+
+@keyframes animate {
+     0% {
+          transform: rotate(0deg);
+     }
+
+     100% {
+          transform: rotate(360deg);
+     }
+}
+
+.login-box {
+     position: absolute;
+     background: #3a2b2b;
+     z-index: 2;
+     inset: 4px;
+     border-radius: 16px;
+     display: flex;
+     flex-direction: column;
+     justify-content: center;
+     align-items: center;
+     color: #fff;
+     overflow: hidden;
+}
+
+.input-box {
+     position: relative;
+     width: 310px;
+     margin: 20px 0;
+     border-bottom: 2px solid #fff;
+}
+
+
+.input-box label {
+     position: absolute;
+     top: 0;
+     left: 5px;
+     transform: translateY(50%);
+     font-size: 1em;
+     pointer-events: none;
+     transition: all 0.3s;
+}
+
+.input-box input:focus~label,
+.input-box input:valid~label {
+     top: -26px;
+}
+
+.input-box input {
+     width: 100%;
+     height: 50px;
+     padding-left: 5px;
+     background: transparent;
+     border: none;
+     outline: none;
+     font-size: 1em;
+}
+
+.input-box i {
+     position: absolute;
+     right: 8px;
+     font-size: 1.2em;
+     line-height: 54px;
+}
