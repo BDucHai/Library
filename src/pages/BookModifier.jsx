@@ -33,16 +33,13 @@ const BookModifier = () => {
                 .get(`http://localhost:8080/api/book/${id}`)
                 .then((e) => {
                     setBook(e.data);
-                    console.log(e.data);
                 })
-                .then((e) => {
-                    console.log(book);
-                });
+                .then((e) => {});
         };
         if (id !== "0") {
             getBook();
         }
-    }, [id]);
+    }, []);
 
     const handleChange = (e) => {
         const value = e.target.value;
@@ -104,11 +101,12 @@ const BookModifier = () => {
                 genre: book.genre,
             })
             .then((e) => {
-                axios.post(`http://localhost:8080/api/book$/{book.id}/bookImg`, {
+                axios.post(`http://localhost:8080/api/book/${book.id}/bookImg`, {
                     file: book.imgBook,
                 });
                 setMess("Cập nhật thành công !!");
                 setOpen(true);
+                document.documentElement.scrollTop = 0;
             })
             .catch((e) => {
                 if (e.response.data === "Not found") {
@@ -117,6 +115,7 @@ const BookModifier = () => {
                     setMess("Sách đã tồn tại");
                 }
                 setOpen(true);
+                document.documentElement.scrollTop = 0;
             });
     };
     return (

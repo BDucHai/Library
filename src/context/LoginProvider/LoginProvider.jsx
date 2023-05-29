@@ -1,8 +1,11 @@
 import axios from "axios";
 import React, { createContext, useState } from "react";
+import {useNavigate } from "react-router-dom";
 
 const LoginContext = createContext();
 function LoginProvider({ children }) {
+    const redirect = useNavigate();
+
     const [user, setUser] = useState();
 
     const [active, setActive] = useState(false);
@@ -42,11 +45,11 @@ function LoginProvider({ children }) {
         setUser();
         setActive(false);
         setAdmin(false);
+        redirect("/login")
     };
 
     const getLastName = () => {
         let array = user.name.trim().split(" ");
-        console.log(array[array.length - 1]);
         return array[array.length - 1];
     };
 

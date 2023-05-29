@@ -33,14 +33,14 @@ const HomeAdmin = () => {
             <div className="px-[14px]">
                 <div className="flex justify-end mb-[10px]">
                     <Link to="/bookModifier/0">
-                        <div className="px-[10px] py-[4px] md:px-[18px] md:py-[8px] bg-[#41b536] rounded-[8px] font-bold text-[10px] sm:text-[14px] md:text-[18px]">
+                        <div className="px-[10px] py-[4px] md:px-[18px] md:py-[8px] bg-[#41b536] rounded-[8px] font-bold text-[12px] sm:text-[14px] md:text-[18px]">
                             Thêm sách
                         </div>
                     </Link>
                 </div>
                 <table className="border-2 border-[#ccbbbb42] bg-[#283d2b96] shadow-lg shadow-gray-600">
                     <thead>
-                        <tr className="border-2 border-[#ccbbbb42] font-bold text-[10px] md:text-[14px] lg:text-[18px]">
+                        <tr className="border-2 border-[#ccbbbb42] font-bold text-[12px] md:text-[14px] lg:text-[18px]">
                             <th>Tiêu đề</th>
                             <th>Tác giả</th>
                             <th>Ngày ra mắt</th>
@@ -52,7 +52,7 @@ const HomeAdmin = () => {
                             <th>Action</th>
                         </tr>
                     </thead>
-                    <tbody className="text-[8px] md:text-[12px] lg:text-[14px]">
+                    <tbody className="text-[10px] md:text-[12px] lg:text-[14px]">
                         {books.length !== 0 &&
                             books.map((book) => (
                                 <tr>

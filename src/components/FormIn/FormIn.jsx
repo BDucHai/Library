@@ -5,10 +5,12 @@ import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { LoginContext } from "../../context/LoginProvider";
 import { Alert, Collapse, IconButton } from "@mui/material";
-import { Close } from "@mui/icons-material";
+import { Close, Home, LockOpen } from "@mui/icons-material";
 
 const FormIn = ({ gen = "login" }) => {
     const cx = classNames.bind(styles);
+
+    const [seePass, setSeePass] = useState(false);
     const [savePass, setSavePass] = useState(false);
     const [open, setOpen] = useState(false);
 
@@ -20,7 +22,7 @@ const FormIn = ({ gen = "login" }) => {
     });
     const [mess, setMess] = useState("");
 
-    const history = useNavigate();
+    const redirect = useNavigate();
 
     const context = useContext(LoginContext);
 
@@ -28,7 +30,7 @@ const FormIn = ({ gen = "login" }) => {
         context.handleCookie();
         console.log(context.active);
         if (context.active) {
-            history("/");
+            redirect("/");
         }
         return () => {
             setOpen(false);
@@ -54,7 +56,7 @@ const FormIn = ({ gen = "login" }) => {
                     } else {
                         context.setAdmin(false);
                     }
-                    history("/");
+                    redirect("/");
                 })
                 .then(() => {
                     if (savePass) {
@@ -117,109 +119,127 @@ const FormIn = ({ gen = "login" }) => {
         }
     };
     return (
-        <div className={cx("container")}>
-            <div className={cx(`${gen === "signup" ? "loginSign" : "login"}`)}>
-                <div className={cx("login-box")}>
-                    {mess !== "" && (
-                        <Collapse in={open} className="mb-[8px]">
-                            <Alert
-                                severity="info"
-                                action={
-                                    <IconButton
-                                        aria-label="close"
-                                        color="inherit"
-                                        size="small"
-                                        onClick={() => {
-                                            setOpen(false);
-                                        }}>
-                                        <Close fontSize="inherit" />
-                                    </IconButton>
-                                }
-                                sx={{
-                                    mb: "2px",
-                                    backgroundColor: "#312727",
-                                    width: "100%",
-                                    margin: "0 auto",
-                                    color: "#fff",
-                                }}>
-                                {mess}
-                            </Alert>
-                        </Collapse>
-                    )}
-                    <h2 className="text-center text-[32px] font-bold uppercase">
-                        {gen === "login" ? "Đăng nhập" : "Đăng Ký"}
-                    </h2>
-                    {gen === "signup" && (
-                        <>
-                            <div className={cx("input-box")}>
-                                <i class="bx bxs-user"></i>
-                                <input type="text" required name="name" value={user.name} onChange={handleChange} />
-                                <label>Họ và Tên</label>
-                            </div>
-                        </>
-                    )}
-                    <div className={cx("input-box")}>
-                        <i class="bx bxs-user-account"></i>
-                        <input type="text" required name="username" value={user.username} onChange={handleChange} />
-                        <label>Tên tài khoản</label>
-                    </div>
-                    <div className={cx("input-box")}>
-                        <i class="bx bxs-lock-alt"></i>
-                        <input type="password" required name="password" value={user.password} onChange={handleChange} />
-                        <label>Mật khẩu</label>
-                    </div>
-                    {gen === "signup" && (
+        <>
+            <Link to="/">
+                <p className="absolute bg-[#3a2b2b] text-white text-[16px] px-[8px] py-[4px] rounded-[4px] cursor-pointer">
+                    Trang chủ <Home />
+                </p>
+            </Link>
+            <div className={cx("container")}>
+                <div className={cx(`${gen === "signup" ? "loginSign" : "login"}`)}>
+                    <div className={cx("login-box")}>
+                        {mess !== "" && (
+                            <Collapse in={open} className="mb-[8px]">
+                                <Alert
+                                    severity="info"
+                                    action={
+                                        <IconButton
+                                            aria-label="close"
+                                            color="inherit"
+                                            size="small"
+                                            onClick={() => {
+                                                setOpen(false);
+                                            }}>
+                                            <Close fontSize="inherit" />
+                                        </IconButton>
+                                    }
+                                    sx={{
+                                        mb: "2px",
+                                        backgroundColor: "#312727",
+                                        width: "100%",
+                                        margin: "0 auto",
+                                        color: "#fff",
+                                    }}>
+                                    {mess}
+                                </Alert>
+                            </Collapse>
+                        )}
+                        <h2 className="text-center text-[32px] font-bold uppercase">
+                            {gen === "login" ? "Đăng nhập" : "Đăng Ký"}
+                        </h2>
+                        {gen === "signup" && (
+                            <>
+                                <div className={cx("input-box")}>
+                                    <i class="bx bxs-user"></i>
+                                    <input type="text" required name="name" value={user.name} onChange={handleChange} />
+                                    <label>Họ và Tên</label>
+                                </div>
+                            </>
+                        )}
                         <div className={cx("input-box")}>
-                            <i class="bx bxs-envelope"></i>
-                            <input type="text" required name="email" value={user.email} onChange={handleChange} />
-                            <label>Email</label>
+                            <i class="bx bxs-user-account"></i>
+                            <input type="text" required name="username" value={user.username} onChange={handleChange} />
+                            <label>Tên tài khoản</label>
                         </div>
-                    )}
-                    {gen === "login" && (
-                        <>
-                            <div className="flex w-[310px] mt-[-2px] mb-[26px]">
-                                <input
-                                    type="checkbox"
-                                    value={savePass}
-                                    onChange={() => {
-                                        setSavePass((prev) => !prev);
-                                        console.log(savePass);
-                                    }}
-                                    className="mr-[6px] mt-[2px]"
-                                />{" "}
-                                Lưu mật khẩu
+                        <div className={cx("input-box")}>
+                            <div className="cursor-pointer">
+                                {seePass ? (
+                                    <i class="bx bxs-lock-open-alt" onClick={() => setSeePass(false)}></i>
+                                ) : (
+                                    <i class="bx bxs-lock-alt" onClick={() => setSeePass(true)}></i>
+                                )}
                             </div>
-                            <div className="flex justify-between w-[310px]">
-                                <p className="cursor-pointer text-[#ccc] hover:text-[#fff]">Quên mật khẩu?</p>
-
-                                <Link to="/signup">
-                                    <p className="cursor-pointer hover:text-[#50d0d8]">Đăng ký</p>
-                                </Link>
+                            <input
+                                type={seePass ? "text" : "password"}
+                                required
+                                name="password"
+                                value={user.password}
+                                onChange={handleChange}
+                            />
+                            <label>Mật khẩu</label>
+                        </div>
+                        {gen === "signup" && (
+                            <div className={cx("input-box")}>
+                                <i class="bx bxs-envelope"></i>
+                                <input type="text" required name="email" value={user.email} onChange={handleChange} />
+                                <label>Email</label>
                             </div>
-                            <div
-                                className="mt-[32px] w-[200px] py-[8px] bg-[#fff] text-[#3a2b2b] rounded-[6px] font-semibold text-center cursor-pointer"
-                                onClick={handleLogin}>
-                                Đăng nhập
-                            </div>
-                        </>
-                    )}
-                    {gen === "signup" && (
-                        <>
-                            <div className="flex justify-end w-[310px] mt-[10px]">
-                                <Link to="/login">
-                                    <p className="cursor-pointer hover:text-[#50d0d8]">Đăng nhập</p>
-                                </Link>
-                            </div>
-                            <div
-                                className="mt-[20px] w-[200px] py-[8px] bg-[#fff] text-[#3a2b2b] rounded-[6px] text-center font-semibold cursor-pointer"
-                                onClick={handleSignup}>
-                                Đăng ký
-                            </div>
-                        </>
-                    )}
+                        )}
+                        {gen === "login" && (
+                            <>
+                                <div className="flex w-[310px] mt-[-2px] mb-[26px]">
+                                    <input
+                                        type="checkbox"
+                                        value={savePass}
+                                        onChange={() => {
+                                            setSavePass((prev) => !prev);
+                                            console.log(savePass);
+                                        }}
+                                        className="mr-[6px] mt-[2px]"
+                                    />{" "}
+                                    Lưu mật khẩu
+                                </div>
+                                <div className="flex justify-between w-[310px]">
+                                    <p className="cursor-pointer text-[#ccc] hover:text-[#fff]">Quên mật khẩu?</p>
+                                    <Link to="/signup">
+                                        <p className="cursor-pointer hover:text-[#50d0d8]">Đăng ký</p>
+                                    </Link>
+                                </div>
+                                <div
+                                    className="mt-[32px] w-[200px] py-[8px] bg-[#fff] text-[#3a2b2b] rounded-[6px] font-semibold text-center cursor-pointer"
+                                    onClick={handleLogin}>
+                                    Đăng nhập
+                                </div>
+                            </>
+                        )}
+                        {gen === "signup" && (
+                            <>
+                                <div className="flex justify-end w-[310px] mt-[10px]">
+                                    <Link to="/login">
+                                        <p className="cursor-pointer hover:text-[#50d0d8]">Đăng nhập</p>
+                                    </Link>
+                                </div>
+                                <div
+                                    className="mt-[20px] w-[200px] py-[8px] bg-[#fff] text-[#3a2b2b] rounded-[6px] text-center font-semibold cursor-pointer"
+                                    onClick={handleSignup}>
+                                    Đăng ký
+                                </div>
+                            </>
+                        )}
+                    </div>
                 </div>
             </div>
-        </div>
+        </>
     );
 };
 
