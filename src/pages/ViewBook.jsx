@@ -6,6 +6,7 @@ import { Button, ButtonGroup, Dialog, DialogActions, DialogContent, DialogConten
 import { CardGiftcard } from "@mui/icons-material";
 import { LoginContext } from "../context/LoginProvider";
 import ReactBook from "../components/ReactBook";
+import Footer from "../components/Footer";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
@@ -19,6 +20,7 @@ const ViewBook = () => {
     const [messSold, setMessSold] = useState("");
     const [openSoldDialog, setOpenSoldDialog] = useState(false);
 
+
     useEffect(() => {
         const getBook = async () => {
             await axios.get(`http://localhost:8080/api/book/${id}`).then((e) => {
@@ -26,17 +28,18 @@ const ViewBook = () => {
             });
         };
         getBook();
-    }, []);
+    }, [id]);
 
     const handleSold = async () => {
         if (context.active) {
             await axios
                 .post(`http://localhost:8080/api/book/sold/${id}`, {
-                    sold: 1,
+                    sold: sold,
                 })
                 .then(() => {
                     setMessSold("Cảm ơn bạn đã mua hàng!");
                     setOpenSoldDialog(true);
+                    setSold(1);
                 })
                 .catch(() => {
                     setMessSold("Mua hàng không thành công hãy thử lại sau!");
@@ -172,6 +175,10 @@ const ViewBook = () => {
                                         <th className="text-start font-medium text-[#ccc]">Hình thức</th>
                                         <td>Bìa Cứng</td>
                                     </tr>
+                                    <tr>
+                                        <th className="text-start font-medium text-[#ccc]">Đã bán:</th>
+                                        <td>{book.sold}</td>
+                                    </tr>
                                     <tr className="h-[14px]">
                                         <th></th>
                                     </tr>
@@ -186,6 +193,7 @@ const ViewBook = () => {
                         </div>
                         <ReactBook bookId={id} />
                     </div>
+                    <Footer />
                 </>
             )}
         </>

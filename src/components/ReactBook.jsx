@@ -1,4 +1,4 @@
-import { AccountCircle, Star } from "@mui/icons-material";
+import { AccountCircle, Delete, Star } from "@mui/icons-material";
 import {
     Avatar,
     Box,
@@ -8,11 +8,13 @@ import {
     DialogActions,
     DialogContent,
     DialogContentText,
+    IconButton,
     InputAdornment,
     Menu,
     MenuItem,
     Rating,
     TextField,
+    Tooltip,
 } from "@mui/material";
 import React, { useContext, useEffect, useState } from "react";
 import { LoginContext } from "../context/LoginProvider";
@@ -44,17 +46,10 @@ const ReactBook = ({ bookId }) => {
     const [message, setMessage] = useState("");
     const [comments, setComments] = useState([]);
     const [commentShow, setCommentShow] = useState([]);
-
     const [page, setPage] = useState(1);
 
-    const [anchorEl, setAnchorEl] = React.useState(null);
-    const open = Boolean(anchorEl);
-    const handleClick = (event) => {
-        setAnchorEl(event.currentTarget);
-    };
-    const handleClose = () => {
-        setAnchorEl(null);
-    };
+    const [yourComments, setYourComments] = useState([]);
+    const [openYC, setOpenYC] = useState(false);
 
     useEffect(() => {
         const getComments = async () => {
@@ -62,24 +57,31 @@ const ReactBook = ({ bookId }) => {
                 .get(`http://localhost:8080/api/book/${bookId}/reacts`)
                 .then((e) => {
                     setComments(e.data);
+                    return e.data;
                 })
-                .then(() => {
+                .then((e) => {
                     setCommentShow(
-                        comments.filter((comment, index) => {
+                        e.filter((_, index) => {
                             return index < 10 * page;
                         })
                     );
                 });
         };
+        const getYourComments = async () => {
+            await axios.get(`http://localhost:8080/api/book/${bookId}/reacts/${context.user.id}`).then((e) => {
+                setYourComments(e.data);
+            });
+        };
         getComments();
+        getYourComments();
         return () => {
             setUpdate(false);
             setNoticeComment("");
         };
-    }, [update, page]);
+    }, [update, page, bookId]);
 
     const handlePost = async () => {
-        await setPosting(true);
+        setPosting(true);
         await axios
             .post(`http://localhost:8080/api/book/${bookId}/react`, {
                 voted: rating,
@@ -99,7 +101,7 @@ const ReactBook = ({ bookId }) => {
     };
 
     const handleDeleteComment = async (commentId) => {
-        handleClose();
+        console.log(commentId);
         await axios
             .delete(`http://localhost:8080/api/book/${bookId}/react/${commentId}`, {
                 params: {
@@ -178,6 +180,83 @@ const ReactBook = ({ bookId }) => {
                                 }}
                             />
                         )}
+                        {yourComments.length !== 0 && (
+                            <>
+                                <div className="mt-[26px] text-[12px] md:text-[14px] mb-[10px] md:mb-0">
+                                    Bạn đã bình luận về cuốn sách này
+                                    <p
+                                        className="text-[#42e3e5] font-bold inline-block ml-[6px] cursor-pointer"
+                                        onClick={() => setOpenYC((prev) => !prev)}>
+                                        {openYC ? "Ẩn" : "Xem ngay"}
+                                    </p>
+                                    <div
+                                        className={`${
+                                            openYC ? "h-full w-full" : "h-0 w-[80%]"
+                                        } overflow-hidden transition-all ease-linear duration-50 rounded-[5px] mt-[10px]`}>
+                                        {yourComments.map((yourCmt) => (
+                                            <div
+                                                key={yourCmt.id}
+                                                className={` flex justify-between pt-[10px] pb-[14px] px-[6px] md:px-[24px] bg-[#e1e8e9] text-[#000]`}>
+                                                <div className="flex">
+                                                    <div>
+                                                        <p className="font-semibold text-[12px] md:text-[16px] mb-[4px] text-[#2b2fc1] cursor-pointer">
+                                                            {yourCmt.username}
+                                                        </p>
+                                                        <div className="flex">
+                                                            <Rating
+                                                                value={yourCmt.voted}
+                                                                readOnly
+                                                                emptyIcon={
+                                                                    <Star
+                                                                        style={{ opacity: 0.6, color: "#000" }}
+                                                                        fontSize="inherit"
+                                                                    />
+                                                                }
+                                                            />
+                                                            {rating !== null && (
+                                                                <Box className="ml-[10px] font-semibold mt-[2px]">
+                                                                    {labels[yourCmt.voted]}
+                                                                </Box>
+                                                            )}
+                                                        </div>
+                                                        <p className="mt-[4px]">{yourCmt.message}</p>
+                                                        <div className="font-semibold mt-[4px]">
+                                                            <span className="mr-[68px] ">{yourCmt.time}</span>
+                                                            <span>{yourCmt.date}</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div className="float-left">
+                                                    <Tooltip
+                                                        title="Xóa"
+                                                        onClick={() => handleDeleteComment(yourCmt.id)}>
+                                                        <IconButton>
+                                                            <Delete />
+                                                        </IconButton>
+                                                    </Tooltip>
+                                                    <Dialog
+                                                        open={alertNotice}
+                                                        onClose={() => setAlertNotice(false)}
+                                                        aria-labelledby="alert-dialog-title"
+                                                        aria-describedby="alert-dialog-description">
+                                                        <DialogContent>
+                                                            <DialogContentText id="alert-dialog-description">
+                                                                {noticeComment}
+                                                            </DialogContentText>
+                                                        </DialogContent>
+                                                        <DialogActions>
+                                                            <Button onClick={() => setAlertNotice(false)} autoFocus>
+                                                                Ok
+                                                            </Button>
+                                                        </DialogActions>
+                                                    </Dialog>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            </>
+                        )}
                     </div>
                 ) : (
                     <h2 className="mt-[20px] text-[12px] sm:text-[14px] md:text-[16px]">
@@ -187,14 +266,14 @@ const ReactBook = ({ bookId }) => {
                         </Link>
                     </h2>
                 )}
-                <div className="bg-[#fff] text-[12px] md:text-[14px] mt-[60px] text-[#000] rounded-[3px]">
+                <div className="bg-[#fff] text-[12px] md:text-[14px] mt-[20px] md:mt-[60px] text-[#000] rounded-[3px]">
                     {comments.length === 0 ? (
                         <p className="text-[16px] py-[10px] text-center font-bold">
                             Chưa có bài đánh giá nào về cuốn sách này!!
                         </p>
                     ) : (
                         <div className="pt-[26px]">
-                            <p className="px-[6px] md:px-[24px] w-full border-b-2 border-b-[#ccc]">
+                            <p className="px-[6px] md:px-[24px] w-full border-b-2 border-b-[#ccc] font-bold text-[14px]">
                                 {comments.length} đánh giá
                             </p>
                             {commentShow.map((comment) => (
@@ -242,34 +321,11 @@ const ReactBook = ({ bookId }) => {
                                     </div>
                                     {context.active && (
                                         <div className="float-left">
-                                            <Button
-                                                id="basic-button"
-                                                aria-controls={open ? "basic-menu" : undefined}
-                                                aria-haspopup="true"
-                                                aria-expanded={open ? "true" : undefined}
-                                                sx={{ backgroundColor: "#f7f1f1" }}
-                                                onClick={handleClick}>
-                                                ...
-                                            </Button>
-                                            <Menu
-                                                id="basic-menu"
-                                                anchorEl={anchorEl}
-                                                open={open}
-                                                onClose={handleClose}
-                                                MenuListProps={{
-                                                    "aria-labelledby": "basic-button",
-                                                }}>
-                                                <MenuItem
-                                                    onClick={handleClose}
-                                                    sx={{ fontSize: { xs: "12px", md: "14px" } }}>
-                                                    Sửa
-                                                </MenuItem>
-                                                <MenuItem
-                                                    onClick={() => handleDeleteComment(comment.id)}
-                                                    sx={{ fontSize: { xs: "12px", md: "14px" } }}>
-                                                    Xóa
-                                                </MenuItem>
-                                            </Menu>
+                                            <Tooltip title="Xóa" onClick={() => handleDeleteComment(comment.id)}>
+                                                <IconButton>
+                                                    <Delete />
+                                                </IconButton>
+                                            </Tooltip>
 
                                             <Dialog
                                                 open={alertNotice}
@@ -293,7 +349,7 @@ const ReactBook = ({ bookId }) => {
                             ))}
                             {commentShow.length < comments.length && (
                                 <div
-                                    className="bg-[#2b2fc1] rounded-[4px] py-[3px] hover:bg-[#1848d8]"
+                                    className="bg-[#2b2fc1] rounded-[2px] text-center text-white py-[6px] hover:bg-[#1848d8] cursor-pointer"
                                     onClick={() => setPage((prev) => prev + 1)}>
                                     Xem thêm
                                 </div>

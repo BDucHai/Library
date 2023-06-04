@@ -1,36 +1,47 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { logo } from "../images";
 import { LoginContext } from "../context/LoginProvider";
 import { Avatar } from "@mui/material";
 import {
     AddShoppingCart,
     FacebookOutlined,
-    HelpOutline,
+    Home,
     Instagram,
     Logout,
     Person,
     PersonAdd,
     Search,
 } from "@mui/icons-material";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const Nav = () => {
+    const navigate = useNavigate();
+
     const context = useContext(LoginContext);
+    const [inputValue, setInputValue] = useState("");
 
     useEffect(() => {
         context.handleCookie();
     }, []);
 
+    const handleSearch = () => {
+        if (inputValue !== "") {
+            navigate(`/book/find/${inputValue}`);
+        }
+    };
+
     return (
         <>
             <div className="fixed z-[10] top-0 w-full flex justify-between items-center bg-gradient-to-b from-[#33282a] to-[#3f2929] px-[20px] md:px-[100px] pt-[10px] pb-[4px] text-[#f6efef] bg-[#3a2b2b] ">
                 <div className="flex">
-                    <div className="flex items-center cursor-pointer pr-[12px] border-r-2 border-[#665c5c]">
-                        <p className="text-[12px] mr-[8px] font-semibold">Hỗ trợ</p>
-                        <div className="hidden md:flex items-center">
-                            <HelpOutline fontSize="small" />
+                    <a href="/">
+                        <div className="flex items-center cursor-pointer pr-[12px] border-r-2 border-[#665c5c]">
+                            <p className="text-[12px] mr-[8px] font-semibold">Trang chủ</p>
+                            <div className="hidden md:flex items-center">
+                                <Home fontSize="small" />
+                            </div>
                         </div>
-                    </div>
+                    </a>
                     <div className="flex items-center ml-[6px] px-[12px] border-r-2 border-[#665c5c]">
                         <p className="hidden md:block text-[12px] ml-[4px] px-[4px] font-semibold">Kết nối</p>
                         <div className="flex items-center mr-[12px] cursor-pointer">
@@ -69,7 +80,7 @@ const Nav = () => {
                                     <p className="text-[12px] ml-[8px] font-semibold">Đăng nhập</p>
                                 </div>
                             </Link>
-                            <Link to="/login">
+                            <Link to="/signup">
                                 <div className="flex items-center cursor-pointer ml-[28px]">
                                     <div className="hidden sm:flex items-center mr-[4px] cursor-pointer">
                                         <PersonAdd fontSize="small" />
@@ -81,18 +92,25 @@ const Nav = () => {
                     )}
                 </div>
             </div>
-            <div className="flex justify-between items-center mt-[34px] px-[20px] md:px-[108px] py-[10px] bg-gradient-to-b from-[#3a2b2b] to-[#433c36]">
+            <div className="flex justify-between items-center mt-[34px] px-[20px] md:px-[108px] pt-[10px] pb-[4px] bg-gradient-to-b from-[#3a2b2b] to-[#433c36]">
                 <Link to="/">
-                    <div className="cursor-pointer">
+                    <div className="cursor-pointer flex items-center text-white">
                         <img src={logo} alt="logo" className="w-[30px] h-[30px] md:w-[50px] md:h-[50px]" />
+                        <p className="hidden lg:block font-bold ml-[20px] text-[32px] text-[#75bde4] font-serif">
+                            HBOOK
+                        </p>
                     </div>
                 </Link>
                 <div className="relative">
                     <input
                         type="text"
                         className="md:w-[300px] lg:w-[400px] sm:py-[2px] md:py-[5px] pl-[12px] pr-[36px] outline-none"
+                        value={inputValue}
+                        onChange={(e) => setInputValue(e.target.value)}
                     />
-                    <div className="absolute top-[0px] right-[0px] cursor-pointer bg-[#ccc] px-[8px] xs:py-[0px] sm:py-[2px] md:py-[4px]">
+                    <div
+                        className="absolute top-[0px] right-[0px] cursor-pointer bg-[#ccc] px-[8px] xs:py-[0px] sm:py-[2px] md:py-[4px]"
+                        onClick={handleSearch}>
                         <Search sx={{ width: { xs: "18px", md: "23px" }, height: { xs: "18px", md: "23px" } }} />
                     </div>
                 </div>

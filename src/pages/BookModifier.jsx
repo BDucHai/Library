@@ -113,6 +113,15 @@ const BookModifier = () => {
                     setMess("Hãy nhập hết các giá trị còn trống");
                 } else if (e.response.data === "Book exist") {
                     setMess("Sách đã tồn tại");
+                    setBook({
+                        title: "",
+                        author: "",
+                        description: "",
+                        imgBook: "",
+                        releaseDate: "",
+                        length: "",
+                        genre: "",
+                    });
                 }
                 setOpen(true);
                 document.documentElement.scrollTop = 0;

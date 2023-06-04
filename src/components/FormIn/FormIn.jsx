@@ -28,7 +28,6 @@ const FormIn = ({ gen = "login" }) => {
 
     useEffect(() => {
         context.handleCookie();
-        console.log(context.active);
         if (context.active) {
             redirect("/");
         }
@@ -56,7 +55,11 @@ const FormIn = ({ gen = "login" }) => {
                     } else {
                         context.setAdmin(false);
                     }
-                    redirect("/");
+                    if (context.admin) {
+                        redirect("/");
+                    } else {
+                        redirect(-1);
+                    }
                 })
                 .then(() => {
                     if (savePass) {
