@@ -2,13 +2,16 @@ import { Button, Dialog, DialogActions, DialogTitle } from "@mui/material";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import useDebounce from "../hooks/useDebounce";
 
 const HomeAdmin = () => {
     const [books, setBooks] = useState([]);
-
     const [update, setUpdate] = useState(false);
-
     const [open, setOpen] = useState(false);
+
+    const [searchValue, setSearchValue] = useState("");
+
+    const debouncedValue = useDebounce(searchValue, 400);
 
     const handleDelete = async (id) => {
         await axios.delete(`http://localhost:8080/api/book/${id}`);
@@ -22,11 +25,21 @@ const HomeAdmin = () => {
                 setBooks(e.data);
             });
         };
-        fetchBook();
+
+        const filtereBook = async () => {
+            await axios.get(`http://localhost:8080/api/book/findBook/${debouncedValue}`).then((e) => {
+                setBooks(e.data);
+            });
+        };
+        if (debouncedValue !== "") {
+            filtereBook();
+        } else {
+            fetchBook();
+        }
         return () => {
             setUpdate(false);
         };
-    }, [update]);
+    }, [update, debouncedValue]);
 
     return (
         <div className="py-[40px] bg-[#6c5151] text-[#fff] min-h-[100vh]">
@@ -37,6 +50,16 @@ const HomeAdmin = () => {
                             Thêm sách
                         </div>
                     </Link>
+                </div>
+                <div className="mb-[8px] ml-[16px]">
+                    <span className="block  text-[14px] md:text-[16px]">Tìm sách theo tên</span>
+                    <input
+                        type="text"
+                        className="px-[6px] py-[4px] rounded-[2px] text-[#000]"
+                        placeholder="Nhập tên sách"
+                        value={searchValue}
+                        onChange={(e) => setSearchValue(e.target.value)}
+                    />
                 </div>
                 <table className="border-2 border-[#ccbbbb42] bg-[#283d2b96] shadow-lg shadow-gray-600 min-w-[810px]">
                     <thead>

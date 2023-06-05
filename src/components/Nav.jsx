@@ -101,7 +101,7 @@ const Nav = () => {
                         </p>
                     </div>
                 </Link>
-                <div className="relative">
+                <div className={`${context.admin ? "hidden" : "block"} relative`}>
                     <input
                         type="text"
                         className="md:w-[300px] lg:w-[400px] sm:py-[2px] md:py-[5px] pl-[12px] pr-[36px] outline-none"
@@ -109,7 +109,7 @@ const Nav = () => {
                         onChange={(e) => setInputValue(e.target.value)}
                     />
                     <div
-                        className="absolute top-[0px] right-[0px] cursor-pointer bg-[#ccc] px-[8px] xs:py-[0px] sm:py-[2px] md:py-[4px]"
+                        className={`absolute top-[0px] right-[0px] cursor-pointer bg-[#ccc] px-[8px] xs:py-[0px] sm:py-[2px] md:py-[4px]`}
                         onClick={handleSearch}>
                         <Search sx={{ width: { xs: "18px", md: "23px" }, height: { xs: "18px", md: "23px" } }} />
                     </div>

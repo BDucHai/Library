@@ -102,8 +102,8 @@ const FormIn = ({ gen = "login" }) => {
                 .catch((e) => {
                     if (e.response.data === "Not blank") {
                         setMess("Vui lòng điền đầy đủ thông tin!");
-                    } else if (e.response.data === "Username more than 5 characters and less 20 characters") {
-                        setMess("Tên tài khoản lớn hơn 5 kí tự và nhỏ hơn 20 kí tự");
+                    } else if (e.response.data === "Username more than 5 characters and less 30 characters") {
+                        setMess("Tên tài khoản lớn hơn 5 kí tự và nhỏ hơn 30 kí tự");
                     } else if (e.response.data === "Email not format") {
                         setMess("Email không đúng định dạng");
                         setUser((prev) => ({ ...prev, email: "" }));
