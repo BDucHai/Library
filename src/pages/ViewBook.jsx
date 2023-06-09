@@ -20,7 +20,6 @@ const ViewBook = () => {
     const [messSold, setMessSold] = useState("");
     const [openSoldDialog, setOpenSoldDialog] = useState(false);
 
-
     useEffect(() => {
         const getBook = async () => {
             await axios.get(`http://localhost:8080/api/book/${id}`).then((e) => {
@@ -49,6 +48,22 @@ const ViewBook = () => {
             setMessSold("Vui lòng đăng nhập để mua hàng");
             setOpenSoldDialog(true);
         }
+    };
+
+    const handleAddCart = async () => {
+        await axios
+            .post(`http://localhost:8080/api/cart/${context.user.id}/book/${id}`, {
+                total: sold,
+                bookTitle: book.title,
+            })
+            .then((e) => {
+                setMessSold("Đã thêm vào giỏ hàng!");
+                setOpenSoldDialog(true);
+            })
+            .catch((e) => {
+                setMessSold("Thêm vào giỏ hàng không thành công!");
+                setOpenSoldDialog(true);
+            });
     };
 
     const soldBonus = () => {
@@ -101,6 +116,7 @@ const ViewBook = () => {
                                     <Button
                                         variant="outlined"
                                         startIcon={<CardGiftcard />}
+                                        onClick={handleAddCart}
                                         sx={{
                                             fontSize: { xs: "10px", lg: "16px" },
                                             color: "#db6262",

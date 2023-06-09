@@ -101,12 +101,18 @@ const BookModifier = () => {
                 genre: book.genre,
             })
             .then((e) => {
-                axios.post(`http://localhost:8080/api/book/${book.id}/bookImg`, {
-                    file: book.imgBook,
+                axios({
+                    method: "post",
+                    url: `http://localhost:8080/api/book/${book.id}/bookImg`,
+                    data: {
+                        file: book.imgBook,
+                    },
+                    headers: { "Content-Type": "multipart/form-data" },
+                }).then((e) => {
+                    setMess("Cập nhật thành công !!");
+                    setOpen(true);
+                    document.documentElement.scrollTop = 0;
                 });
-                setMess("Cập nhật thành công !!");
-                setOpen(true);
-                document.documentElement.scrollTop = 0;
             })
             .catch((e) => {
                 if (e.response.data === "Not found") {
@@ -270,7 +276,11 @@ const BookModifier = () => {
                         {book.imgBook && (
                             <div>
                                 <img
-                                    src={id === "0" ? URL.createObjectURL(book.imgBook) : book.imgBook}
+                                    src={
+                                        book.imgBook === Object(book.imgBook)
+                                            ? URL.createObjectURL(book.imgBook)
+                                            : book.imgBook
+                                    }
                                     alt="IMG preview"
                                 />
                             </div>

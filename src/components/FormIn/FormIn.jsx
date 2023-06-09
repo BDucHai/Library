@@ -55,7 +55,7 @@ const FormIn = ({ gen = "login" }) => {
                     } else {
                         context.setAdmin(false);
                     }
-                    if (context.admin) {
+                    if (e.data.role === "admin") {
                         redirect("/");
                     } else {
                         redirect(-1);

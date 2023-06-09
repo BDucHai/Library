@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import { logo } from "../images";
 import { LoginContext } from "../context/LoginProvider";
-import { Avatar } from "@mui/material";
+import { Avatar, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from "@mui/material";
 import {
     AddShoppingCart,
     FacebookOutlined,
@@ -20,6 +20,8 @@ const Nav = () => {
     const context = useContext(LoginContext);
     const [inputValue, setInputValue] = useState("");
 
+    const [open, setOpen] = useState(false);
+
     useEffect(() => {
         context.handleCookie();
     }, []);
@@ -27,6 +29,14 @@ const Nav = () => {
     const handleSearch = () => {
         if (inputValue !== "") {
             navigate(`/book/find/${inputValue}`);
+        }
+    };
+
+    const handleCart = () => {
+        if (context.active) {
+            navigate("/shoppingCart");
+        } else {
+            setOpen(true);
         }
     };
 
@@ -92,7 +102,10 @@ const Nav = () => {
                     )}
                 </div>
             </div>
-            <div className="flex justify-between items-center mt-[34px] px-[20px] md:px-[108px] pt-[10px] pb-[4px] bg-gradient-to-b from-[#3a2b2b] to-[#433c36]">
+            <div
+                className={`flex ${
+                    context.admin ? "justify-center" : "justify-between"
+                } items-center mt-[34px] px-[20px] md:px-[108px] pt-[10px] pb-[4px] bg-gradient-to-b from-[#3a2b2b] to-[#433c36]`}>
                 <Link to="/">
                     <div className="cursor-pointer flex items-center text-white">
                         <img src={logo} alt="logo" className="w-[30px] h-[30px] md:w-[50px] md:h-[50px]" />
@@ -114,7 +127,7 @@ const Nav = () => {
                         <Search sx={{ width: { xs: "18px", md: "23px" }, height: { xs: "18px", md: "23px" } }} />
                     </div>
                 </div>
-                <div className="text-white cursor-pointer">
+                <div className={`${context.admin ? "hidden" : "block"} text-white cursor-pointer`} onClick={handleCart}>
                     <AddShoppingCart
                         sx={{
                             width: { xs: "18px", sm: "24px", md: "32px" },
@@ -122,6 +135,29 @@ const Nav = () => {
                         }}
                     />
                 </div>
+                <Dialog
+                    open={open}
+                    onClose={() => setOpen(false)}
+                    aria-labelledby="alert-dialog-title"
+                    aria-describedby="alert-dialog-description">
+                    <DialogTitle id="alert-dialog-title">{"Muốn xem giỏ hàng?"}</DialogTitle>
+                    <DialogContent>
+                        <DialogContentText id="alert-dialog-description">
+                            Để xem giỏ hàng xin vui lòng đăng nhập!
+                        </DialogContentText>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={() => setOpen(false)}>Không xem</Button>
+                        <Button
+                            onClick={() => {
+                                setOpen(false);
+                                navigate("/login");
+                            }}
+                            autoFocus>
+                            Đăng nhập
+                        </Button>
+                    </DialogActions>
+                </Dialog>
             </div>
         </>
     );
