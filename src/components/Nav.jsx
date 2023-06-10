@@ -44,14 +44,14 @@ const Nav = () => {
         <>
             <div className="fixed z-[10] top-0 w-full flex justify-between items-center bg-gradient-to-b from-[#33282a] to-[#3f2929] px-[20px] md:px-[100px] pt-[10px] pb-[4px] text-[#f6efef] bg-[#3a2b2b] ">
                 <div className="flex">
-                    <a href="/">
+                    <Link to="/">
                         <div className="flex items-center cursor-pointer pr-[12px] border-r-2 border-[#665c5c]">
                             <p className="text-[12px] mr-[8px] font-semibold">Trang chủ</p>
                             <div className="hidden md:flex items-center">
                                 <Home fontSize="small" />
                             </div>
                         </div>
-                    </a>
+                    </Link>
                     <div className="flex items-center ml-[6px] px-[12px] border-r-2 border-[#665c5c]">
                         <p className="hidden md:block text-[12px] ml-[4px] px-[4px] font-semibold">Kết nối</p>
                         <div className="flex items-center mr-[12px] cursor-pointer">
@@ -117,12 +117,13 @@ const Nav = () => {
                 <div className={`${context.admin ? "hidden" : "block"} relative`}>
                     <input
                         type="text"
-                        className="md:w-[300px] lg:w-[400px] sm:py-[2px] md:py-[5px] pl-[12px] pr-[36px] outline-none"
+                        placeholder="Nhập tên sách để tìm kiếm"
+                        className="md:w-[300px] lg:w-[400px] sm:py-[2px] md:py-[5px] pl-[12px] pr-[36px] outline-none rounded-[3px]"
                         value={inputValue}
                         onChange={(e) => setInputValue(e.target.value)}
                     />
                     <div
-                        className={`absolute top-[0px] right-[0px] cursor-pointer bg-[#ccc] px-[8px] xs:py-[0px] sm:py-[2px] md:py-[4px]`}
+                        className={`absolute top-[0px] right-[0px] cursor-pointer bg-[#ccc] px-[8px] xs:py-[0px] sm:py-[2px] md:py-[4px] rounded-[3px]`}
                         onClick={handleSearch}>
                         <Search sx={{ width: { xs: "18px", md: "23px" }, height: { xs: "18px", md: "23px" } }} />
                     </div>
